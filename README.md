@@ -28,4 +28,4 @@ This project analyzes long-run patterns in capital investment by public K–12 s
 ---
 ## Contact
 
-For questions, please contact Brian Murphy.
+For questions, please contact Brian Murphy: [bmmurphy2@uh.edu](mailto:bmmurphy2@uh.edu)
