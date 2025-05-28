@@ -522,3 +522,46 @@ preserve
 	reghdfe CF_Capital PerCapitaCntyIncome enrollment popcnty, absorb(state_name year) cluster(id_govs)
 restore
 
+********************************************************************************
+*** Revisions 4
+
+gen expend_check = totalcurrentoper + totalcapitaloutlays
+gen match_flag = abs(totalexpenditure - expend_check) <= 20
+tab match_flag
+
+gen expend_check2 = totalcurrentoper + totalcapitaloutlays + totalsalarieswages 
+gen match_flag2 = abs(totalexpenditure - expend_check2) <= 20
+tab match_flag2
+
+gen expend_check3 = totalcurrentoper + totalcapitaloutlays + totalsalarieswages + generalexpenditure
+gen match_flag3 = abs(totalexpenditure - expend_check3) <= 20
+tab match_flag3
+
+gen expend_check4 = totalcurrentoper + totalsalarieswages 
+gen match_flag4 = abs(totalexpenditure - expend_check4) <= 20
+tab match_flag4
+
+gen expend_check5 = totalcurrentoper 
+gen match_flag5 = abs(totalexpenditure - expend_check5) <= 20
+tab match_flag5
+
+preserve
+    collapse (mean) CFC_no_debt self_financed_capital sinkingfdcashsec totalcapitaloutlays ///
+        totalexpenditure, by(id_govs)
+
+    *gen expend_check = CFC_no_debt + totalcapitaloutlays
+    *gen match_flag = (round(expend_check, 0.01) == round(totalexpend, 0.01))  // check match
+
+    label var CFC_no_debt "CF Current"
+    label var self_financed_capital "CF Capital"
+    label var sinkingfdcashsec "Sinking Fund"
+    label var totalcapitaloutlays "Capital Outlays"
+    label var totalexpenditure "Total Expenditure"
+
+    format CFC_no_debt self_financed_capital sinkingfdcashsec totalcapitaloutlays ///
+        totalexpenditure %9.0f
+
+    texsave id_govs CFC_no_debt self_financed_capital sinkingfdcashsec totalcapitaloutlays ///
+        totalexpenditure using "$outpath/sd_capital_check.tex", replace ///
+        title("District Capital and Expenditure Check") varlabels
+restore
